@@ -22,18 +22,13 @@ export class PaymentCategory extends Model {
         type: DataType.STRING,
          allowNull: false
     })
-
     name!: string
+
     @Column({
         type: DataType.STRING,
          allowNull: false
     })
     amount!: string
-
-    @Column({
-        type: DataType.STRING,
-         allowNull: false
-    })
 
     @Column({type: DataType.BOOLEAN, defaultValue: true})
     is_active!: boolean

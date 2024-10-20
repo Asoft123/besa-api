@@ -11,6 +11,7 @@ class PaymentCategoryController extends BaseController {
     @middlewares([adminUserAuth])
     public async getUserCategories(req: AdminAuthRequest, res: Response, next: NextFunction) {
         try {
+
             const data = await (new PaymentCategoryService()).userCategories();
             return res.json({
                 message: "Fetched all payment categories",
@@ -23,7 +24,6 @@ class PaymentCategoryController extends BaseController {
     }
     
     @route('get', '/active/operational')
-    @middlewares([adminUserAuth])
     public async getActiveCategories(req:Request, res:Response, next:NextFunction){
         try {
             const data = await (new PaymentCategoryService()).activeCategories();
@@ -41,6 +41,7 @@ class PaymentCategoryController extends BaseController {
  
     @middlewares([adminUserAuth])
     public async createCreate(req: AdminAuthRequest, res: Response, next: NextFunction) {
+        console.log(req.body)
         try {
             await (new PaymentCategoryService()).createPaymentCategory(req.user!, req.body.name, req.body.amount);
 

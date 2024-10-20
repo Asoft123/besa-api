@@ -1,6 +1,8 @@
 import { AdminAuthRequest } from "@mopos/constants/interfaces/AuthRequest";
+import { CreatePaymentType } from "@mopos/constants/types/Payment";
 import { adminUserAuth } from "@mopos/middlewares/validations/authentication";
 import PaymentCategoryService from "@mopos/services/PaymentCategoryService";
+import PaymentService from "@mopos/services/PaymentService";
 import { buildV1AppPath } from "@mopos/utils/helpers";
 import { NextFunction, Request, Response } from "express";
 import { BaseController, controller, middlewares, route } from "express-ts-annotations";
@@ -9,9 +11,9 @@ import { BaseController, controller, middlewares, route } from "express-ts-annot
 class PaymentController extends BaseController {
     @route('get', '/')
     @middlewares([adminUserAuth])
-    public async getUserCategories(req: AdminAuthRequest, res: Response, next: NextFunction) {
+    public async getPayments(req: AdminAuthRequest, res: Response, next: NextFunction) {
         try {
-            const data = await (new PaymentCategoryService()).userCategories();
+            const data = await (new PaymentService()).userPayments();
             return res.json({
                 message: "Fetched all payment categories",
                 success: true,
@@ -37,16 +39,35 @@ class PaymentController extends BaseController {
         }
        
     }
+
+    @route('get', '/details/:paymentId')
+    public async getReceipt(req:Request, res:Response, next:NextFunction){
+        const paymentId = req.params.paymentId
+        try {
+            const data = await (new PaymentService()).printReceipt(paymentId);
+            return res.json({
+                message:"receipt fetched successfully",
+                success: true,
+                data: data,
+            });
+        } catch (error) {
+            next(error);
+        }
+       
+    }
     @route('post', '/')
  
-    @middlewares([adminUserAuth])
-    public async createCreate(req: AdminAuthRequest, res: Response, next: NextFunction) {
+    // @middlewares([adminUserAuth])
+
+    public async createdPayment(req: AdminAuthRequest, res: Response, next: NextFunction) {
+        const payment = req.body as CreatePaymentType
         try {
-            await (new PaymentCategoryService()).createPaymentCategory(req.user!, req.body.name, req.body.amount);
+           const data = await (new PaymentService()).createPayment(req.user!, payment);
 
             return res.json({
                 success: true,
-                message: 'Payment category added successfuly',
+                message: 'Payment  was successfuly',
+                data
             });
         } catch (error) {
             next(error);
