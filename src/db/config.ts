@@ -5,7 +5,7 @@ import models from "@mopos/models";
 dotenv.config();
 
 const dbConnection = new Sequelize({
-    dialect: 'postgres',
+    dialect: 'mysql',
     host: process.env.DB_HOST,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
